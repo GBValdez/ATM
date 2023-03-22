@@ -6,28 +6,34 @@ import lombok.Data;
 
 @Data
 public class numericKeyboard {
-    private Scanner scan;
+    private Scanner scan = new Scanner(System.in);;
     private screen scr;
 
     public numericKeyboard(screen thisScreen) {
-        this.scan = new Scanner(System.in);
         this.scr = thisScreen;
     }
 
+    public String writeString() {
+        scr.showMessage("", "white");
+        return scan.nextLine();
+    }
+
     public Long writeLong() {
+        scr.showMessage("", "white");
         boolean error = false;
         Long number = 0l;
-        while (error) {
+        do {
             try {
                 number = scan.nextLong();
                 error = false;
             } catch (Exception e) {
                 error = true;
-                this.scr.showMessage("Ingrese un valor valido\n", "red");
+                this.scr.showMessage("Ingresa solo numeros\n", "red");
                 this.scr.showMessage("", "white");
                 scan.nextLine();
             }
-        }
+        } while (error);
+
         return number;
     }
 
