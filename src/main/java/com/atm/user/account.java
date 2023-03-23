@@ -25,7 +25,7 @@ public class account {
     }
 
     public boolean isOpenSession() {
-        return this.numberAccount != null && this.NIP != null;
+        return getNumberAccount() != null && getNIP() != null;
     }
 
     public void executeTransaction(Float amount) {

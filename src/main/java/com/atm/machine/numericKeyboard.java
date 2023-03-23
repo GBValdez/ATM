@@ -6,35 +6,22 @@ import lombok.Data;
 
 @Data
 public class numericKeyboard {
-    private Scanner scan = new Scanner(System.in);;
-    private screen scr;
+    private static Scanner scan = new Scanner(System.in);;
 
-    public numericKeyboard(screen thisScreen) {
-        this.scr = thisScreen;
-    }
-
-    public String writeString() {
-        scr.showMessage("", "white");
+    public static String writeString() {
+        screen.showMessage("", "white");
         return scan.nextLine();
     }
 
-    public Long writeLong() {
-        scr.showMessage("", "white");
-        boolean error = false;
-        Long number = 0l;
+    public static float writeNumber() {
+        screen.showMessage("", "white");
         do {
-            try {
-                number = scan.nextLong();
-                error = false;
-            } catch (Exception e) {
-                error = true;
-                this.scr.showMessage("Ingresa solo numeros\n", "red");
-                this.scr.showMessage("", "white");
+            if (!scan.hasNextFloat()) {
+                screen.showMessage("Error: Por favor ingrese unicamente un numero\n", "red");
+                screen.showMessage("", "white");
                 scan.nextLine();
             }
-        } while (error);
-
-        return number;
+        } while (!scan.hasNextFloat());
+        return scan.nextFloat();
     }
-
 }
