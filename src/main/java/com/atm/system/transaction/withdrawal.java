@@ -1,12 +1,15 @@
 package com.atm.system.transaction;
 
-import com.atm.user.account;
+import lombok.experimental.SuperBuilder;
 
+@SuperBuilder
 public class withdrawal extends transaction {
 
     @Override
-    public void execute(account changeAccount) {
-        changeAccount.executeTransaction(-absoluteAmount());
+    public void execute() {
+        if (!isExecuted)
+            toAccount.executeTransaction(-absoluteAmount());
+        isExecuted = true;
     }
 
 }

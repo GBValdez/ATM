@@ -1,12 +1,16 @@
 package com.atm;
 
+import com.atm.machine.dispenser;
 import com.atm.machine.numericKeyboard;
 import com.atm.machine.screen;
 import com.atm.system.internal.menu;
+import com.atm.system.transaction.deposit;
 import com.atm.user.account;
+import com.atm.system.transaction.withdrawal;
 
 public class ATM {
-    private static account newUser = new account();
+    private static account newUser = account.builder().balance(5000f).build();
+    private static float amountAvailable = 100;
 
     public static void main(String[] args) {
         authentication();
@@ -42,7 +46,7 @@ public class ATM {
                 showBalance();
                 break;
             case "2":
-                deposit();
+                withdrawal();
             default:
                 break;
         }
@@ -56,21 +60,66 @@ public class ATM {
         menuPrincipal();
     }
 
-    private static void deposit() {
+    private static void withdrawal() {
         String[] labels = { "1 - $20          4 - $100", "2 - $40          5 - $200",
                 "3 - $60          6 - Cancelar Transacción" };
         String[] options = { "1", "2", "3", "4", "5", "6" };
         menu depositMenu = menu.builder().title("Menu de retiro").options(options).labels(labels)
                 .instruction("Elija un monto de retiro: ").build();
         String optionSelected = depositMenu.executeMenu();
-        menuPrincipal();
+
+        float[] amountsOptions = { 20, 40, 60, 100, 200, 0 };
+        float amount = amountsOptions[Integer.parseInt(optionSelected) - 1];
+        if (amount != 0) {
+            screen.cleanScreen();
+            boolean error = false;
+            if (newUser.getBalance() >= amount) {
+                if (dispenser.isPosibleWithdrawAmount(amount)) {
+                    withdrawal newWithdrawal = withdrawal.builder().amount(amount).toAccount(newUser).build();
+                    newWithdrawal.execute();
+                    dispenser.deliverAmount(amount);
+                    screen.showMessage("Retiro realizado con éxito", "green");
+                    screen.showMessage("Por favor tome su efectivo", "green");
+                } else {
+                    screen.showMessage("El ATM no posee el monto suficiente", "red");
+                    error = true;
+                }
+            } else {
+                screen.showMessage("El monto seccionado excede el monto de la cuenta", "red");
+                error = true;
+            }
+            sleep(3000l);
+            if (error) {
+                withdrawal();
+            } else {
+                menuPrincipal();
+            }
+        } else {
+            menuPrincipal();
+        }
+
     }
 
+    private static void deposit() {
+
+    }
+
+    // Esta función pausara la ejecución durante un tiempo establecido en
+    // milisegundos
     private static void sleep(Long time) {
         try {
             Thread.sleep(time);
         } catch (Exception e) {
             screen.showMessage("Error al esperar", "red");
         }
+    }
+
+    // Métodos para el saldo disponible dentro del ATM
+    public static float getAmountAvailable() {
+        return amountAvailable;
+    }
+
+    public static void setAmountAvailable(float amount) {
+        amountAvailable = amount;
     }
 }

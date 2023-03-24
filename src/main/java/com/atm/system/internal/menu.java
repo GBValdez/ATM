@@ -32,4 +32,15 @@ public class menu {
         screen.cleanScreen();
         return response;
     }
+
+    public Long getLongExecuteMenu() {
+        Long response = null;
+        do {
+            showMenu();
+            response = numericKeyboard.writeNumberLong();
+        } while (response == null);
+        screen.cleanScreen();
+        return response;
+
+    }
 }

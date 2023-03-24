@@ -2,10 +2,17 @@ package com.atm.system.transaction;
 
 import com.atm.user.account;
 
-public abstract class transaction {
-    Float amount;
+import lombok.AllArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
-    public abstract void execute(account account);
+@SuperBuilder
+@AllArgsConstructor
+public abstract class transaction {
+    protected Float amount;
+    protected account toAccount;
+    protected boolean isExecuted;
+
+    public abstract void execute();
 
     protected Float absoluteAmount() {
         return Math.abs(amount);

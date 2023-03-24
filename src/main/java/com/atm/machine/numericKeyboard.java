@@ -13,7 +13,12 @@ public class numericKeyboard {
         return scan.nextLine();
     }
 
-    public static float writeNumber() {
+    public static Long writeNumberLong() {
+        screen.showMessage("", "white");
+        return scan.hasNextLong() ? scan.nextLong() : null;
+    }
+
+    public static float writeNumberMandatory() {
         screen.showMessage("", "white");
         do {
             if (!scan.hasNextFloat()) {

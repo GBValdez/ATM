@@ -1,13 +1,15 @@
 package com.atm.user;
 
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 public class account {
-    private Float balance = 0f;
-    private Float floatingBalanceM = 0f;
-    private Long numberAccount = null;
-    private Long NIP = null;
+    private Float balance;
+    private Float floatingBalanceM;
+    private Long numberAccount;
+    private Long NIP;
 
     public boolean setCredentials(String number, String nip) {
         try {

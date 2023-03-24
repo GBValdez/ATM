@@ -1,13 +1,15 @@
 package com.atm.system.transaction;
 
-import com.atm.user.account;
+import lombok.experimental.SuperBuilder;
 
+@SuperBuilder
 public class deposit extends transaction {
 
     @Override
-    public void execute(account changeAccount) {
-        changeAccount.executeTransaction(absoluteAmount());
-
+    public void execute() {
+        if (!isExecuted)
+            this.toAccount.executeTransaction(absoluteAmount());
+        isExecuted = true;
     }
 
 }
