@@ -10,7 +10,7 @@ El presente proyecto es un ejercicio de universidad que trata de emular las func
 ## Instalacion
 Es necesario tener instalado maven para el uso de las dependencia
 1. Abre el proyecto
-2. Ejecuta ```mvn clean install```
+2. Ejecuta ```mvn clean install``` para instalar las dependencias
 
 ## Ejecutar
 Situate sobre la clase **ATM** y ejecuta el metodo **main**
