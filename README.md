@@ -8,7 +8,7 @@ El presente proyecto es un ejercicio de universidad que trata de emular las func
 4. Logearse y deslogearse
 
 ## Instalacion
-Es necesario tener instalado maven para el uso de las dependencia
+Es necesario tener instalado maven para el uso de las dependencias
 1. Abre el proyecto
 2. Ejecuta ```mvn clean install``` para instalar las dependencias
 
