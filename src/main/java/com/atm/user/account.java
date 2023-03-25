@@ -19,11 +19,20 @@ public class account {
             if (valid) {
                 setNumberAccount(NUMBER);
                 setNIP(NIP);
+                setBalance(1000f);
+                setFloatingBalanceM(0f);
             }
             return valid;
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public void assignOut() {
+        numberAccount = null;
+        NIP = null;
+        balance = null;
+        floatingBalanceM = null;
     }
 
     public boolean isOpenSession() {

@@ -1,9 +1,8 @@
 package com.atm;
 
-import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.atm.machine.depositSlot;
 import com.atm.machine.dispenser;
@@ -63,9 +62,24 @@ public class ATM {
             case "3":
                 deposit();
                 break;
+            case "4":
+                signOut();
+                break;
             default:
                 break;
+
         }
+        if (!optionSelected.equals("4")) {
+            menuPrincipal();
+        }
+    }
+
+    public static void signOut() {
+        newUser.assignOut();
+        screen.cleanScreen();
+        screen.showMessage("Muchas gracias por su visita", "blue");
+        sleep(3000l);
+        main(null);
     }
 
     private static void showBalance() {
@@ -73,7 +87,6 @@ public class ATM {
         screen.showMessage(balanceText, "purple");
         screen.showMessage("Presione enter para salir\n", "blue");
         numericKeyboard.writeString();
-        menuPrincipal();
     }
 
     private static void withdrawal() {
@@ -96,7 +109,7 @@ public class ATM {
                     newWithdrawal.execute();
                     dispenser.deliverAmount(amount);
                     screen.showMessage("Retiro realizado con éxito\n", "green");
-                    screen.showMessage("Por favor tome su efectivo", "green");
+                    screen.showMessage("Por favor tome su efectivo", "blue");
                 } else {
                     screen.showMessage("El ATM no posee el monto suficiente", "red");
                     error = true;
@@ -108,11 +121,7 @@ public class ATM {
             sleep(3000l);
             if (error) {
                 withdrawal();
-            } else {
-                menuPrincipal();
             }
-        } else {
-            menuPrincipal();
         }
 
     }
@@ -127,25 +136,28 @@ public class ATM {
         if (cents == 0) {
             menuPrincipal();
         } else {
+            final AtomicBoolean passTime = new AtomicBoolean(false);
             TimerTask timerTask = new TimerTask() {
                 @Override
                 public void run() {
                     screen.cleanScreen();
                     screen.showMessage("Error: Se cancelo la transacción por inactividad\n", "red");
                     screen.showMessage("Por favor inténtelo nuevamente", "blue");
+                    passTime.set(true);
                     sleep(3000l);
-                    menuPrincipal();
+
                 }
             };
             Timer timer = new Timer();
             timer.schedule(timerTask, 1000 * 5);
             depositSlot.detectEnvelope();
-            timer.cancel();
-            deposit newDeposit = deposit.builder().amount(cents).toAccount(newUser).build();
-            newDeposit.execute();
-            screen.showMessage("Deposito realizado con éxito", "green");
-            sleep(3000l);
-            menuPrincipal();
+            if (!passTime.get()) {
+                timer.cancel();
+                deposit newDeposit = deposit.builder().amount(cents).toAccount(newUser).build();
+                newDeposit.execute();
+                screen.showMessage("Deposito realizado con éxito", "green");
+                sleep(3000l);
+            }
         }
     }
 
