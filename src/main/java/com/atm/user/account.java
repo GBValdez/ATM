@@ -30,8 +30,11 @@ public class account {
         return getNumberAccount() != null && getNIP() != null;
     }
 
-    public void executeTransaction(Float amount) {
-        balance += amount;
+    public void executeDeposit(Float amount) {
+        floatingBalanceM += amount;
     }
 
+    public void executeWithdrawal(Float amount) {
+        balance -= amount;
+    }
 }

@@ -2,10 +2,10 @@ package com.atm.machine;
 
 import java.util.Scanner;
 
-import lombok.Data;
+import lombok.Getter;
 
-@Data
 public class numericKeyboard {
+    @Getter
     private static Scanner scan = new Scanner(System.in);;
 
     public static String writeString() {

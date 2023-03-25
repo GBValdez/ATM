@@ -8,7 +8,7 @@ public class withdrawal extends transaction {
     @Override
     public void execute() {
         if (!isExecuted)
-            toAccount.executeTransaction(-absoluteAmount());
+            toAccount.executeWithdrawal(absoluteAmount().floatValue());
         isExecuted = true;
     }
 

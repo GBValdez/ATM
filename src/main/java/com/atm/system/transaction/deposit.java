@@ -7,8 +7,10 @@ public class deposit extends transaction {
 
     @Override
     public void execute() {
-        if (!isExecuted)
-            this.toAccount.executeTransaction(absoluteAmount());
+        if (!isExecuted) {
+            final float FINAL_AMOUNT = absoluteAmount() / 100;
+            this.toAccount.executeDeposit(FINAL_AMOUNT);
+        }
         isExecuted = true;
     }
 

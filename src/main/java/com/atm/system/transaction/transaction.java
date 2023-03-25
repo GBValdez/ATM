@@ -8,13 +8,13 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @AllArgsConstructor
 public abstract class transaction {
-    protected Float amount;
+    protected Long amount;
     protected account toAccount;
     protected boolean isExecuted;
 
     public abstract void execute();
 
-    protected Float absoluteAmount() {
+    protected Long absoluteAmount() {
         return Math.abs(amount);
     }
 }

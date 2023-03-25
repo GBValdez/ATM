@@ -15,20 +15,26 @@ public class menu {
     private String[] options;
     private String title;
     private String instruction;
+    private boolean error;
 
     private void showMenu() {
         screen.cleanScreen();
         screen.showMessage(title + "\n", "purple");
         screen.showListMessage(labels);
+        if (error)
+            screen.showMessage("Error: Ingrese un valor correcto\n", "red");
         screen.showMessage(instruction, "blue");
+
     }
 
     public String executeMenu() {
         String response;
+        error = false;
         do {
             showMenu();
             response = numericKeyboard.writeString();
-        } while (!Arrays.asList(options).contains(response));
+            error = !Arrays.asList(options).contains(response);
+        } while (error);
         screen.cleanScreen();
         return response;
     }
@@ -38,7 +44,10 @@ public class menu {
         do {
             showMenu();
             response = numericKeyboard.writeNumberLong();
-        } while (response == null);
+            error = response == null;
+            if (error)
+                numericKeyboard.getScan().nextLine();
+        } while (error);
         screen.cleanScreen();
         return response;
 
