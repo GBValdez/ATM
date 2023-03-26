@@ -24,6 +24,8 @@ public class ATM {
     @Setter
     private static float amountAvailable = 100;
 
+    // Cargamos datos en el array de la base de datos y ejecutamos la función
+    // principal
     public static void main(String[] args) {
         dataBase.connect();
         principal();
@@ -81,6 +83,7 @@ public class ATM {
         }
     }
 
+    // Función para cerrar sesión
     public static void signOut() {
         newUser = null;
         screen.cleanScreen();
@@ -89,6 +92,7 @@ public class ATM {
         principal();
     }
 
+    // Funcionalidad de mostrar saldo
     private static void showBalance() {
         String balanceText = "Saldo actual: Q" + newUser.getBalance().toString() + "\n";
         screen.showMessage(balanceText, "purple");
@@ -96,6 +100,7 @@ public class ATM {
         numericKeyboard.writeString();
     }
 
+    // Funcionalidad para hacer Retiros
     private static void withdrawal() {
         String[] labels = { "1 - $20          4 - $100", "2 - $40          5 - $200",
                 "3 - $60          6 - Cancelar Transacción" };
@@ -133,6 +138,7 @@ public class ATM {
 
     }
 
+    // Funcionalidad para hacer depósitos
     private static void deposit() {
         String[] label = { "0 - Ir al menu principal" };
         menu menuDeposit = menu.builder().title("Deposito")
@@ -143,7 +149,11 @@ public class ATM {
         if (cents == 0) {
             menuPrincipal();
         } else {
+            // Crearemos una variables que dira si el deposito es aun valido
             final AtomicBoolean passTime = new AtomicBoolean(false);
+            // Crearemos una timer que se ejecutara en 2 minutos el siguiente código
+            // (función run) que cancelara el deposito en caso el usuario no ingrese el
+            // sobre
             TimerTask timerTask = new TimerTask() {
                 @Override
                 public void run() {
@@ -151,13 +161,17 @@ public class ATM {
                     screen.showMessage("Error: Se cancelo la transacción por inactividad\n", "red");
                     screen.showMessage("Por favor inténtelo nuevamente", "blue");
                     passTime.set(true);
-                    sleep(3000l);
+                    sleep(1000l * 60l * 2l);
 
                 }
             };
+            // Creamos el timer y lo iniciamos
             Timer timer = new Timer();
             timer.schedule(timerTask, 1000 * 5);
+            // Esperamos entrada del usuario
             depositSlot.detectEnvelope();
+            // En caso de que el usuario ingreso el sobre a tiempo cancelamos el timer y
+            // ejecutamos el deposito
             if (!passTime.get()) {
                 timer.cancel();
                 deposit newDeposit = deposit.builder().amount(cents).toAccount(newUser).build();
@@ -168,7 +182,7 @@ public class ATM {
         }
     }
 
-    // Para logearse
+    // Funcionalidad verificara los datos enviados por el login
     private static boolean Login(String number, String nip) {
         try {
             final Long NUMBER = Long.parseLong(number);

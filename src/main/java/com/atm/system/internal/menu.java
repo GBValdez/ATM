@@ -27,6 +27,9 @@ public class menu {
 
     }
 
+    // Función que mostrara el menu e insistirá al usuario que ingrese un input que
+    // este en las
+    // opciones
     public String executeMenu() {
         String response;
         error = false;
@@ -39,6 +42,8 @@ public class menu {
         return response;
     }
 
+    // Función que mostrara el menu e insistirá al usuario ingresar un dato de tipo
+    // Long
     public Long getLongExecuteMenu() {
         Long response = null;
         do {

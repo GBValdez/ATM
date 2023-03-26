@@ -18,6 +18,7 @@ public class numericKeyboard {
         return scan.hasNextLong() ? scan.nextLong() : null;
     }
 
+    // Función que insistirá que el usuario ingrese un float
     public static float writeNumberMandatory() {
         screen.showMessage("", "white");
         do {
