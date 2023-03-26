@@ -8,6 +8,7 @@ import com.atm.machine.depositSlot;
 import com.atm.machine.dispenser;
 import com.atm.machine.numericKeyboard;
 import com.atm.machine.screen;
+import com.atm.system.internal.dataBase;
 import com.atm.system.internal.menu;
 import com.atm.system.transaction.deposit;
 import com.atm.user.account;
@@ -18,12 +19,17 @@ import lombok.Setter;
 import com.atm.system.transaction.withdrawal;
 
 public class ATM {
-    private static account newUser = account.builder().balance(5000f).floatingBalanceM(0f).build();
+    private static account newUser;
     @Getter
     @Setter
     private static float amountAvailable = 100;
 
     public static void main(String[] args) {
+        dataBase.connect();
+        principal();
+    }
+
+    private static void principal() {
         authentication();
         menuPrincipal();
     }
@@ -37,12 +43,13 @@ public class ATM {
             screen.showMessage("Ingresa su NIP : ", "blue");
             final String NIP = numericKeyboard.writeString();
             screen.cleanScreen();
-            if (!newUser.setCredentials(NUMBER_ACCOUNT, NIP)) {
+            if (!Login(NUMBER_ACCOUNT, NIP)) {
                 screen.showMessage("Error: Numero de cuenta o Nip invalido\n", "red");
                 sleep(3000l);
             }
-        } while (!newUser.isOpenSession());
+        } while (newUser == null);
         screen.showMessage("Bienvenido\n", "green");
+        sleep(3000l);
     }
 
     private static void menuPrincipal() {
@@ -75,11 +82,11 @@ public class ATM {
     }
 
     public static void signOut() {
-        newUser.assignOut();
+        newUser = null;
         screen.cleanScreen();
         screen.showMessage("Muchas gracias por su visita", "blue");
         sleep(3000l);
-        main(null);
+        principal();
     }
 
     private static void showBalance() {
@@ -158,6 +165,25 @@ public class ATM {
                 screen.showMessage("Deposito realizado con éxito", "green");
                 sleep(3000l);
             }
+        }
+    }
+
+    // Para logearse
+    private static boolean Login(String number, String nip) {
+        try {
+            final Long NUMBER = Long.parseLong(number);
+            final Long NIP = Long.parseLong(nip);
+            boolean valid = (number.toString().length() == 5 && NIP.toString().length() == 5);
+            if (valid) {
+                account found = dataBase.findAccount(NUMBER, NIP);
+                valid = found != null;
+                if (valid) {
+                    newUser = found;
+                }
+            }
+            return valid;
+        } catch (Exception e) {
+            return false;
         }
     }
 
